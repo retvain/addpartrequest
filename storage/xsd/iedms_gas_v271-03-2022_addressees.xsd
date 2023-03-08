@@ -1,0 +1,621 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--Схема паспорта транспортного контейнера ГАС-->
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+  targetNamespace="urn:IEDMS:ADDRESSEES" xmlns:gar="urn:IEDMS:ADDRESSEES"
+  elementFormDefault="qualified" attributeFormDefault="qualified"
+  version="2.7.1">
+
+  <element name="container">
+    <complexType>
+      <sequence>
+        <element name="header">
+          <!--Заголовок транспортного контейнера ГАС-->
+          <complexType>
+            <sequence>
+              <element name="uid" minOccurs="1" type="gar:globalUniqueIdentifier"/>
+                <!--Уникальный идентификатор контейнера-->
+              <element name="created" minOccurs="1" type="gar:dateTimeZone"/>
+                <!--Дата и время создания контейнера-->
+              <element name="previewFile" minOccurs="0" type="gar:fileName"/>
+                <!--Название файла визуализации технологического сообщения-->
+              <element name="signatureFile" minOccurs="0" type="gar:fileName"/>
+                <!--Название файла электронной подписи транспортного контейнера-->
+            </sequence>
+          </complexType>
+        </element>
+        <choice>
+          <element name="referenceActual" type="gar:referenceActual"/>
+            <!--Актуальный глобальный адресный справочник-->
+          <element name="referenceHistory" type="gar:referenceHistory"/>
+            <!--Исторический глобальный адресный справочник-->
+          <element name="referenceRequest" type="gar:referenceRequest"/>
+            <!--Запрос глобального адресного справочника-->
+          <element name="referenceResponse" type="gar:referenceResponse"/>
+            <!--Отправка глобального адресного справочника-->
+          <element name="docAddParticipantsRequest" type="gar:docAddParticipantsRequest"/>
+            <!--Заявка оператора на добавление новых участников-->
+          <element name="docAddParticipantsResponse" type="gar:docAddParticipantsResponse"/>
+            <!--Ответ организатора по добавлению новых участников-->
+          <element name="docUpdateParticipantsRequest" type="gar:docUpdateParticipantsRequest"/>
+            <!--Заявка оператора на изменение сведений об участниках-->
+          <element name="docUpdateParticipantsResponse" type="gar:docUpdateParticipantsResponse"/>
+            <!--Ответ организатора по изменению сведений об участниках-->
+          <element name="docUpdateOrganizationDataRequest" type="gar:docUpdateOrganizationDataRequest"/>
+            <!--Заявка участника на изменение сведений об организации-->
+          <element name="docUpdateOrganizationDataResponse" type="gar:docUpdateOrganizationDataResponse"/>
+            <!--Ответ организатора по изменению сведений об организации-->
+        </choice>
+      </sequence>
+      <attribute name="version" type="token" use="required"/>
+        <!--Версия схемы паспорта транспортного контейнера ГАС-->
+    </complexType>
+  </element>
+
+  <!--Структура для публикации актуальных сведений ГАС -->
+  <complexType name="referenceActual">
+    <sequence>
+      <element name="extractionDate" minOccurs="1" type="gar:dateTimeZone"/>
+        <!--Дата и время извлечения сведений из ГАС (для указанной версии)-->
+      <element name="dataVersion" minOccurs="1" type="gar:numberValue"/>
+        <!--Порядковый номер версии сведений ГАС, присвоенный организатором-->
+      <element name="organizators">
+        <!-- Организаторы -->
+        <complexType>
+          <sequence>
+            <element name="organizator" type="gar:organizator" maxOccurs="unbounded"/>
+          </sequence>
+        </complexType>
+      </element>
+      <element name="operators">
+        <!-- Операторы -->
+        <complexType>
+          <sequence>
+            <element name="operator" type="gar:operator" maxOccurs="unbounded"/>
+          </sequence>
+        </complexType>
+      </element>
+      <element name="participants">
+        <!-- Участники -->
+        <complexType>
+          <sequence>
+            <element name="participant" type="gar:participant" maxOccurs="unbounded"/>
+          </sequence>
+        </complexType>
+      </element>
+      <element name="organizationsData">
+        <!-- Сведения об организациях участников -->
+        <complexType>
+          <sequence>
+            <element name="organizationData" type="gar:organizationData" maxOccurs="unbounded"/>
+          </sequence>
+        </complexType>
+      </element>
+    </sequence>
+  </complexType>
+
+  <!--Структура для публикации исторических сведений ГАС -->
+  <complexType name="referenceHistory">
+    <sequence>
+      <element name="extractionDate" minOccurs="1" type="gar:dateTimeZone"/>
+        <!--Дата и время извлечения сведений ГАС (актуальность истории)-->
+      <element name="organizatorsHistory">
+        <!-- Организаторы -->
+        <complexType>
+          <sequence>
+            <element name="organizatorHistory" minOccurs="0" maxOccurs="unbounded">
+              <complexType>
+                <sequence maxOccurs="unbounded">
+                  <element name="startDate" type="gar:dateTimeZone"/>
+                    <!-- Дата и время начала действия снимка -->
+                  <element name="organizator" type="gar:organizator"/>
+                    <!-- Снимок (историческая запись на дату) -->
+                </sequence>
+                <attribute name="uid" type="gar:globalUniqueIdentifier" use="required"/>
+              </complexType>
+            </element>
+          </sequence>
+        </complexType>
+      </element>
+      <element name="operatorsHistory">
+        <!-- Операторы -->
+        <complexType>
+          <sequence>
+            <element name="operatorHistory" minOccurs="0" maxOccurs="unbounded">
+              <complexType>
+                <sequence maxOccurs="unbounded">
+                  <element name="startDate" type="gar:dateTimeZone"/>
+                    <!-- Дата и время начала действия снимка -->
+                  <element name="operator" type="gar:operator"/>
+                    <!-- Снимок (историческая запись на дату) -->
+                </sequence>
+                <attribute name="uid" type="gar:globalUniqueIdentifier" use="required"/>
+              </complexType>
+            </element>
+          </sequence>
+        </complexType>
+      </element>
+      <element name="participantsHistory">
+        <!-- Участники -->
+        <complexType>
+          <sequence>
+            <element name="participantHistory" minOccurs="0" maxOccurs="unbounded">
+              <complexType>
+                <sequence maxOccurs="unbounded">
+                  <element name="startDate" type="gar:dateTimeZone"/>
+                    <!-- Дата и время начала действия снимка -->
+                  <element name="participant" type="gar:participant"/>
+                    <!-- Снимок (историческая запись на дату) -->
+                </sequence>
+                <attribute name="uid" type="gar:globalUniqueIdentifier" use="required"/>
+              </complexType>
+            </element>
+          </sequence>
+        </complexType>
+      </element>
+    </sequence>
+  </complexType>
+
+  <!--Структура запроса "Запрос глобального адресного справочника"-->
+  <complexType name="referenceRequest">
+    <sequence>
+      <element name="abonentUid" minOccurs="1" type="gar:globalUniqueIdentifier"/>
+        <!--Идентификатор источника запроса (оператора, участника)-->
+      <element name="extractionKind" minOccurs="1">
+        <!--Вид запрашиваемых сведений-->
+        <simpleType>
+          <restriction base="string">
+             <enumeration value="Актуальные сведения"/>
+             <enumeration value="Исторические сведения"/>
+          </restriction>
+        </simpleType>
+      </element>
+    </sequence>
+    <attribute name="requestUid" type="gar:globalUniqueIdentifier" use="required"/>
+      <!--Уникальный идентификатор запроса-->
+  </complexType>
+
+  <!--Структура ответа "Отправка глобального адресного справочника"-->
+  <complexType name="referenceResponse">
+    <sequence>
+      <element name="requestUid" minOccurs="1" type="gar:globalUniqueIdentifier"/>
+        <!--Идентификатор запроса, на который подготовлен ответ-->
+      <choice>
+        <element name="referenceActual" type="gar:referenceActual"/>
+        <element name="referenceHistory" type="gar:referenceHistory"/>
+      </choice>
+    </sequence>
+    <attribute name="responseUid" type="gar:globalUniqueIdentifier" use="required"/>
+      <!--Уникальный идентификатор ответа-->
+  </complexType>
+
+  <!--Структура документа "Заявка оператора на добавление новых участников"-->
+  <complexType name="docAddParticipantsRequest">
+    <sequence>
+      <element name="docNumber" minOccurs="1" type="gar:identityValue"/>
+        <!--Локальный номер документа по данным оператора-->
+      <element name="docCreated" minOccurs="1" type="gar:dateTimeZone"/>
+        <!--Дата и время создания документа по данным оператора-->
+      <element name="operatorUid" minOccurs="1" type="gar:globalUniqueIdentifier"/>
+        <!--Идентификатор обслуживающего оператора-->
+      <element name="addParticipantsRequest" minOccurs="1">
+        <complexType>
+          <sequence>
+            <element name="addRecordRequest" minOccurs="1" maxOccurs="unbounded">
+              <complexType>
+                <sequence>
+                  <element name="orgRegNum" minOccurs="1" type="gar:orgRegNum"/>
+                    <!--ОГРН организации участника, уникальный в рамках ГАС-->
+                  <element name="orgAddress" minOccurs="1" type="gar:stringValue"/>
+                    <!--Место государственной регистрации юридического лица-->
+                  <element name="communicationPartner" minOccurs="1" type="gar:communicationPartner"/>
+                    <!--Сведения о новом участнике-->
+                  <element name="communicationService" minOccurs="1" type="gar:communicationService"/>
+                    <!--Сведения о подключении участника-->
+                  <element name="justification" minOccurs="1" type="gar:stringValue"/>
+                    <!--Официальное основание для добавления участника-->
+                  <element name="desiredUid" minOccurs="0" type="gar:globalUniqueIdentifier"/>
+                    <!--Исторический идентификатор по версии оператора ГУ МЭДО (технический реквизит)-->
+                  <element name="desiredIedms" minOccurs="0" type="gar:stringValue"/>
+                    <!--Исторический почтовый адрес по версии оператора ГУ МЭДО (технический реквизит)-->
+                </sequence>
+                <attribute name="requestId" type="gar:numberValue" use="required"/>
+                  <!--Локальный идентификатор запроса в заявке (номер строки)-->
+              </complexType>
+            </element>
+          </sequence>
+        </complexType>
+      </element>
+    </sequence>
+    <attribute name="docUid" type="gar:globalUniqueIdentifier" use="required"/>
+      <!--Уникальный идентификатор документа (заявки)-->
+  </complexType>
+
+  <!--Структура документа "Ответ организатора по добавлению новых участников"-->
+  <complexType name="docAddParticipantsResponse">
+    <sequence>
+      <element name="docRequestUid" minOccurs="1" type="gar:globalUniqueIdentifier"/>
+        <!--Уникальный идентификатор документа (заявки), на который подготовлен ответ-->
+      <element name="addParticipantsResponse" minOccurs="1">
+        <complexType>
+          <sequence>
+            <choice>
+              <!--Структура ответа "Запрос некорректный"-->
+              <element name="requestInvalid">
+                <complexType>
+                  <sequence>
+                    <element name="rejectionReason" minOccurs="1" type="gar:stringValue"/>
+                      <!--Комментарий организатора с причиной отклонения запроса-->
+                  </sequence>
+                </complexType>
+              </element>
+              <element name="addRecordsResponce">
+                <complexType>
+                  <sequence>
+                    <choice minOccurs="1" maxOccurs="unbounded">
+                      <!--Структура ответа "Запрос принят"-->
+                      <element name="requestAccepted">
+                        <complexType>
+                          <sequence>
+                            <element name="participant" minOccurs="1" type="gar:participant"/>
+                              <!--Сведения нового зарегистрированного участника-->
+                          </sequence>
+                          <attribute name="requestId" type="gar:numberValue" use="required"/>
+                            <!--Локальный идентификатор запроса в заявке (номер строки)-->
+                        </complexType>
+                      </element>
+                      <!--Структура ответа "Запрос отклонён"-->
+                      <element name="requestRejected">
+                        <complexType>
+                          <sequence>
+                            <element name="rejectionReason" minOccurs="1" type="gar:stringValue"/>
+                              <!--Комментарий организатора с причиной отклонения запроса-->
+                          </sequence>
+                          <attribute name="requestId" type="gar:numberValue" use="required"/>
+                            <!--Локальный идентификатор запроса в заявке (номер строки)-->
+                        </complexType>
+                      </element>
+                    </choice>
+                  </sequence>
+                </complexType>
+              </element>
+            </choice>
+          </sequence>
+        </complexType>
+      </element>
+    </sequence>
+    <attribute name="docUid" type="gar:globalUniqueIdentifier" use="required"/>
+      <!--Уникальный идентификатор документа (ответа)-->
+  </complexType>
+  
+  <!--Структура документа "Заявка оператора на изменение сведений об участниках" -->
+  <complexType name="docUpdateParticipantsRequest">
+    <sequence>
+      <element name="docNumber" minOccurs="1" type="gar:identityValue"/>
+        <!--Локальный номер документа по данным оператора-->
+      <element name="docCreated" minOccurs="1" type="gar:dateTimeZone"/>
+        <!--Дата и время создания заявки по данным оператора-->
+      <element name="operatorUid" minOccurs="1" type="gar:globalUniqueIdentifier"/>
+        <!--Идентификатор оператора информационного взаимодействия-->
+      <element name="updateParticipantsRequest" minOccurs="1">
+        <complexType>
+          <sequence>
+            <element name="updRecordRequest" minOccurs="1" maxOccurs="unbounded">
+              <complexType>
+                <sequence>
+                  <element name="participant" minOccurs="1" type="gar:participant"/>
+                    <!--Изменённые сведения по участнику-->
+                  <element name="justification" minOccurs="1" type="gar:stringValue"/>
+                    <!--Официальное основание для изменений данных по участнику-->
+                </sequence>
+                <attribute name="requestId" type="gar:numberValue" use="required"/>
+                  <!--Локальный идентификатор запроса в заявке (номер строки)-->
+              </complexType>
+            </element>
+          </sequence>
+        </complexType>
+      </element>
+    </sequence>
+    <attribute name="docUid" type="gar:globalUniqueIdentifier" use="required"/>
+      <!--Уникальный идентификатор документа (заявки)-->
+  </complexType>
+
+  <!--Структура документа "Ответ организатора по изменению сведений об участниках"-->
+  <complexType name="docUpdateParticipantsResponse">
+    <sequence>
+      <element name="docRequestUid" minOccurs="1" type="gar:globalUniqueIdentifier"/>
+        <!--Уникальный идентификатор документа (заявки), на который подготовлен ответ-->
+      <element name="updateParticipantsResponse" minOccurs="1">
+        <complexType>
+          <sequence>
+            <choice>
+              <!--Структура ответа "Запрос некорректный"-->
+              <element name="requestInvalid">
+                <complexType>
+                  <sequence>
+                    <element name="rejectionReason" minOccurs="1" type="gar:stringValue"/>
+                      <!--Комментарий организатора с причиной отклонения запроса-->
+                  </sequence>
+                </complexType>
+              </element>
+              <element name="updRecordsResponse">
+                <complexType>
+                  <sequence>
+                    <choice minOccurs="1" maxOccurs="unbounded">
+                      <!--Структура ответа "Запрос принят"-->
+                      <element name="requestAccepted">
+                        <complexType>
+                          <sequence>
+                            <element name="participant" minOccurs="1" type="gar:participant"/>
+                              <!--Обновлённые сведения об участнике-->
+                          </sequence>
+                          <attribute name="requestId" type="gar:numberValue" use="required"/>
+                            <!--Локальный идентификатор запроса в заявке (номер строки)-->
+                        </complexType>
+                      </element>
+                      <!--Структура ответа "Запрос отклонён"-->
+                      <element name="requestRejected">
+                        <complexType>
+                          <sequence>
+                            <element name="rejectionReason" minOccurs="1" type="gar:stringValue"/>
+                              <!--Комментарий организатора с причиной отклонения запроса-->
+                          </sequence>
+                          <attribute name="requestId" type="gar:numberValue" use="required"/>
+                            <!--Локальный идентификатор запроса в заявке (номер строки)-->
+                        </complexType>
+                      </element>
+                    </choice>
+                  </sequence>
+                </complexType>
+              </element>
+            </choice>
+          </sequence>
+        </complexType>
+      </element>
+    </sequence>
+    <attribute name="docUid" type="gar:globalUniqueIdentifier" use="required"/>
+      <!--Уникальный идентификатор документа (ответа)-->
+  </complexType>
+
+  <!--Структура документа "Заявка участника на изменение сведений об организации"-->
+  <complexType name="docUpdateOrganizationDataRequest">
+    <sequence>
+      <element name="docNumber" minOccurs="1" type="gar:identityValue"/>
+        <!--Локальный номер документа по данным участника-->
+      <element name="docCreated" minOccurs="1" type="gar:dateTimeZone"/>
+        <!--Дата и время создания заявки по данным участника-->
+      <element name="participantUid" minOccurs="1" type="gar:globalUniqueIdentifier"/>
+        <!--Идентификатор участника информационного взаимодействия-->
+      <element name="updateOrganizationDataRequest" minOccurs="1">
+        <complexType>
+          <sequence>
+            <element name="organizationData" minOccurs="1" type="gar:organizationData"/>
+              <!--Изменённые сведения по организации участника-->
+            <element name="justification" minOccurs="1" type="gar:stringValue"/>
+              <!--Официальное основание для изменений данных по участнику-->
+          </sequence>
+        </complexType>
+      </element>
+    </sequence>
+    <attribute name="docUid" type="gar:globalUniqueIdentifier" use="required"/>
+      <!--Уникальный идентификатор документа (заявки)-->
+  </complexType>
+
+  <!--Структура документа "Ответ организатора по изменению сведений об организации"-->
+  <complexType name="docUpdateOrganizationDataResponse">
+    <sequence>
+      <element name="docRequestUid" minOccurs="1" type="gar:globalUniqueIdentifier"/>
+        <!--Уникальный идентификатор документа (заявки), на который подготовлен ответ-->
+      <element name="updateOrganizationDataResponse" minOccurs="1">
+        <complexType>
+          <sequence>
+            <choice>
+              <!--Структура ответа "Запрос принят"-->
+              <element name="requestAccepted">
+                <complexType>
+                  <sequence>
+                    <element name="organizationData" minOccurs="1" type="gar:organizationData"/>
+                      <!--Обновлённые сведения об организации участника-->
+                  </sequence>
+                </complexType>
+              </element>
+              <!--Структура ответа "Запрос отклонён"-->
+              <element name="requestRejected">
+                <complexType>
+                  <sequence>
+                    <element name="rejectionReason" minOccurs="1" type="gar:stringValue"/>
+                      <!--Комментарий организатора с причиной отклонения запроса-->
+                  </sequence>
+                </complexType>
+              </element>
+            </choice>
+          </sequence>
+        </complexType>
+      </element>
+    </sequence>
+    <attribute name="docUid" type="gar:globalUniqueIdentifier" use="required"/>
+      <!--Уникальный идентификатор документа (ответа)-->
+  </complexType>
+
+  <!--Типы документационного уровня (делопроизводство)-->
+  <complexType name="organizationData">
+    <sequence>
+      <element name="organization" type="gar:organization"/>
+      <element name="attestations" minOccurs="0">
+        <complexType>
+          <sequence>
+            <element name="classification" type="gar:qualifiedValue" maxOccurs="unbounded"/>
+          </sequence>
+        </complexType>
+      </element>
+      <element name="departments" minOccurs="0">
+        <complexType>
+          <sequence>
+            <element name="department" type="gar:department" maxOccurs="unbounded"/>
+          </sequence>
+        </complexType>
+      </element>
+      <element name="persons" minOccurs="0">
+        <complexType>
+          <sequence>
+            <element name="person" type="gar:person" maxOccurs="unbounded"/>
+          </sequence>
+        </complexType>
+      </element>
+    </sequence>
+    <attribute name="participantUid" type="gar:globalUniqueIdentifier" use="required"/>
+      <!--Уникальный идентификатор участника информационного взаимодействия-->
+  </complexType>
+
+  <complexType name="organization">
+    <sequence>
+      <element name="title" type="gar:stringValue"/>
+      <element name="address" type="gar:stringValue" minOccurs="0"/>
+      <element name="phone" type="gar:stringValue" minOccurs="0"/>
+      <element name="email" type="gar:stringValue" minOccurs="0"/>
+      <element name="website" type="gar:stringValue" minOccurs="0"/>
+    </sequence>
+    <attribute name="orgRegNum" type="gar:orgRegNum" use="required"/>
+      <!--ОГРН организации-->
+  </complexType>
+
+  <complexType name="department">
+    <simpleContent>
+      <extension base="gar:stringValue">
+        <attribute name="id" type="gar:identityValue" use="required"/>
+          <!--Обязательный идентификатор подразделения-->
+        <attribute name="parentId" type="gar:identityValue" use="optional"/>
+          <!--Необязательный идентификатор вышестоящего подразделения-->
+      </extension>
+    </simpleContent>
+  </complexType>
+
+  <complexType name="person">
+    <sequence>
+      <element name="post" type="gar:stringValue" minOccurs="1"/>
+      <element name="name" type="gar:stringValue" minOccurs="1"/>
+      <element name="phone" type="gar:stringValue" minOccurs="0"/>
+      <element name="email" type="gar:stringValue" minOccurs="0"/>
+    </sequence>
+    <attribute name="id" type="gar:identityValue" use="required"/>
+      <!--Обязательный идентификатор сотрудника-->
+    <attribute name="departmentId" type="gar:identityValue" use="optional"/>
+      <!--Необязательный идентификатор подразделения-->
+  </complexType>
+
+  <simpleType name="orgRegNum">
+    <restriction base="normalizedString">
+      <pattern value="\d{13}"/>
+      <minLength value="13"/>
+      <maxLength value="13"/>
+    </restriction>
+  </simpleType>
+
+  <!--Типы транспортного уровня (адресация)-->
+  <complexType name="communicationPartner">
+    <sequence>
+      <element name="title" type="gar:stringValue" minOccurs="1"/>
+      <element name="organization" type="gar:stringValue" minOccurs="1"/>
+      <element name="authority" type="gar:stringValue" minOccurs="1"/>
+      <element name="phone" type="gar:stringValue" minOccurs="1"/>
+      <element name="email" type="gar:stringValue" minOccurs="1"/>
+    </sequence>
+  </complexType>
+
+  <complexType name="communicationService">
+    <sequence>
+      <element name="operatorUid" type="gar:globalUniqueIdentifier" minOccurs="1"/>
+        <!--Идентификатор обслуживающего оператора-->
+      <element name="isActive" type="boolean" minOccurs="1"/>
+        <!--Готовность к обмену информацией (активность подключения)--> 
+      <element name="isSecure" type="boolean" minOccurs="1"/>
+        <!--Готовность к обмену информацией ограниченного распространения--> 
+    </sequence>
+  </complexType>
+
+  <complexType name="abonent">
+    <!--Адресная информация абонента (организатора, оператора, участника)-->
+    <complexContent>
+      <extension base="gar:communicationPartner">
+        <attribute name="uid" type="gar:globalUniqueIdentifier" use="required"/>
+          <!--Уникальный идентификатор абонента в ГАС-->
+        <attribute name="iedmsId" type="gar:stringValue" use="optional"/>
+          <!--Почтовый адрес абонента в транспортной шине (необязательное значение)-->
+      </extension>
+    </complexContent>
+  </complexType>
+
+  <complexType name="organizator">
+    <complexContent>
+      <extension base="gar:abonent">
+      </extension>
+    </complexContent>
+  </complexType>
+
+  <complexType name="operator">
+    <complexContent>
+      <extension base="gar:abonent">
+      </extension>
+    </complexContent>
+  </complexType>
+
+  <complexType name="participant">
+    <complexContent>
+      <extension base="gar:abonent">
+        <sequence>
+          <element name="communicationService" type="gar:communicationService" minOccurs="1"/>
+            <!--Сведения о подключении участника--> 
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+
+  <!--Базовые типы-->
+  <simpleType name="numberValue">
+    <restriction base="positiveInteger">
+      <minInclusive value="1"/>
+      <maxInclusive value="999999999"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="stringValue">
+    <restriction base="normalizedString">
+      <minLength value="1"/>
+      <maxLength value="511"/>
+    </restriction>
+  </simpleType>
+  <complexType name="qualifiedValue">
+    <!--Справочное значение-->
+    <simpleContent>
+      <extension base="gar:stringValue">
+        <attribute name="id" type="gar:identityValue" use="required"/>
+      </extension>
+    </simpleContent>
+  </complexType>
+  <simpleType name="identityValue">
+    <!--Идентификатор объекта (код)-->
+    <restriction base="token">
+      <minLength value="1"/>
+      <maxLength value="127"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="fileName">
+    <!--Имя файла внутри контейнера-->
+    <restriction base="normalizedString">
+      <minLength value="1"/>
+      <maxLength value="255"/>
+      <pattern value="[a-zA-Z0-9_]{1,250}.[a-zA-Z0-9]{3,4}"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="globalUniqueIdentifier">
+    <!--Уникальный идентификатор объекта (GUID)-->
+    <restriction base="normalizedString">
+      <pattern
+        value="[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}"/>
+    </restriction>
+  </simpleType>
+  <simpleType name="dateTimeZone">
+    <restriction base="dateTime">
+      <pattern value="\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[+|-]\d{2}:\d{2}"/>
+      <minInclusive value="1900-01-01T00:00:00"/>
+    </restriction>
+  </simpleType>
+</schema>

@@ -1,0 +1,39 @@
+{
+	"info": {
+		"_postman_id": "559c1f65-6fc4-4587-8d55-b3e24e16f10c",
+		"name": "requests generator",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "16308701"
+	},
+	"item": [
+		{
+			"name": "New Request",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {}
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"data\": {\r\n        \"docNumber\": \"1A\",\r\n        \"operatorUid\": \"604d59f8-38e4-4772-b06c-e68da701d4c0\",\r\n        \"orgRegNum\": \"2654777881256\",\r\n        \"orgAddress\": \"Московская обл.,г.Руза,ул.Международная 12,д.1\",\r\n        \"title\": \"Рузский оператор\",\r\n        \"organization\": \"ООО Рузский региональный оператор\",\r\n        \"authority\": \"Краснов Игорь Семёнович\",\r\n        \"phone\": \"+7(498)545-52-17\",\r\n        \"email\": \"ruz@oper.mail\",\r\n        \"isActive\": true,\r\n        \"isSecure\": true,\r\n        \"justification\": \"Основание\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://addpartrequest.local:8081",
+					"protocol": "http",
+					"host": [
+						"addpartrequest",
+						"local"
+					],
+					"port": "8081"
+				}
+			},
+			"response": []
+		}
+	]
+}
